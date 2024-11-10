@@ -12,7 +12,8 @@ using namespace std;
 class Server{
     private:
     int server_socket ;
+    struct sockaddr_in serverAddress;
     public:
-    Server(string _address, uint32_t port, uint32_t clients_no);
+    Server(uint32_t port, uint32_t clients_no);
 };
 #endif

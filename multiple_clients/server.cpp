@@ -1,22 +1,15 @@
 #include "server.h"
-Server::Server(string _address, uint32_t _port, uint32_t clients_no){
+Server::Server(uint32_t _port, uint32_t clients_no){
     //Create the Socket
     server_socket = socket(AF_INET, SOCK_STREAM, 0); 
     if(server_socket == -1){
         cerr<<"socket creation failed with "<< strerror(errno) << endl; //Access the last error in C++
     }
 
-    // Specify the address
-    sockaddr_in serverAddress;
-    memset(&serverAddress, 0, sizeof(serverAddress));   //initialize the structure to zero
-    serverAddress.sin_family = AF_INET; //AF_INET specifies the IPv4 protocol family
+    // Setting up address
+    serverAddress.sin_family = AF_INET;
+    serverAddress.sin_addr.s_addr = INADDR_ANY;
     serverAddress.sin_port = htons(_port);
-    
-    // Convert the IP address from string to the binary format required by sin_addr
-    // without c_str() ---> error: no suitable conversion function from "std::string" to "PCSTR" (aka "const CHAR *") exists
-    if(inet_pton(AF_INET, _address.c_str(), &serverAddress.sin_addr) <0 ){
-        cerr<<"Invalid Address\n";
-    }
 
     // Bind the socket to the address
     if (bind(server_socket, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) < 0) {
